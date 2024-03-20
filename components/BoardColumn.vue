@@ -4,9 +4,9 @@
       <div>
         <UInput
           v-if="editNameState"
-          v-model="column.name"
+          v-model="columnName"
           type="text"
-          @keyup.enter="editNameState = false"
+          @keyup.enter="editColumnName"
         />
         <h2 v-else>
           {{ column.name }}
@@ -14,11 +14,12 @@
       </div>
       <div>
         <UButton
-          class="i-heroicons-pencil-square mr-2"
+          icon="i-heroicons-pencil-square"
+          class="mr-2"
           @click="editNameState = !editNameState"
         />
         <UButton
-          class="i-heroicons-trash"
+          icon="i-heroicons-trash"
           color="red"
           @click="deleteColumn(columnIndex)"
         />
@@ -38,19 +39,45 @@
         </UCard>
       </li>
     </ul>
+    <UInput
+      v-model="newTaskName"
+      type="text"
+      placeholder="Create new task"
+      icon="i-heroicons-plus-circle-solid"
+      @keyup.enter="addTask(newTaskName)"
+    />
   </UContainer>
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   column: any
   columnIndex: number
 }>()
 
+const columnName = ref<string>(props.column.name)
+
 const editNameState = ref(false)
+const newTaskName = ref("")
 
 const boardStore = useBoardStore()
 const router = useRouter()
+
+const editColumnName = () => {
+  boardStore.editColumnName({
+    columnId: props.column.id,
+    columnName: columnName.value,
+  })
+  editNameState.value = false
+}
+
+const addTask = (name: string) => {
+  boardStore.addTask({
+    columnId: props.column.id,
+    taskName: name,
+  })
+  newTaskName.value = ""
+}
 
 const deleteColumn = (index: number) => {
   boardStore.deleteColumn(index)
@@ -60,5 +87,3 @@ const goToTask = (id: number) => {
   router.push(`/tasks/${id}`)
 }
 </script>
-
-<style></style>

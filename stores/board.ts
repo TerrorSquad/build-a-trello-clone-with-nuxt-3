@@ -5,6 +5,18 @@ import boardData from "~/data/board.json"
 export const useBoardStore = defineStore("boardStore", () => {
   const board = useStorage("board", boardData)
 
+  const getTask = computed(() => {
+    return (taskId: string) => {
+      for (const column of board.value.columns) {
+        for (const task of column.tasks) {
+          if (task.id === taskId) {
+            return task
+          }
+        }
+      }
+    }
+  })
+
   const addColumn = (columnName: string) => {
     board.value.columns.push({
       id: crypto.randomUUID(),
@@ -17,7 +29,11 @@ export const useBoardStore = defineStore("boardStore", () => {
     board.value.columns.splice(index, 1)
   }
   return {
+    /** State */
     board,
+    /* Getters */
+    getTask,
+    /** Actions */
     addColumn,
     deleteColumn,
   }

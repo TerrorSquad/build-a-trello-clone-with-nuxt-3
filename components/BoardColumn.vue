@@ -29,7 +29,10 @@
         v-for="task in column.tasks"
         :key="task.id"
       >
-        <UCard class="mb-4">
+        <UCard
+          class="mb-4"
+          @click="goToTask(task.id)"
+        >
           <strong>{{ task.name }}</strong>
           <p>{{ task.description }}</p>
         </UCard>
@@ -47,9 +50,14 @@ defineProps<{
 const editNameState = ref(false)
 
 const boardStore = useBoardStore()
+const router = useRouter()
 
 const deleteColumn = (index: number) => {
   boardStore.deleteColumn(index)
+}
+
+const goToTask = (id: number) => {
+  router.push(`/tasks/${id}`)
 }
 </script>
 

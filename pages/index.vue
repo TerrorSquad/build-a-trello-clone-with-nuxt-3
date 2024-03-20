@@ -1,23 +1,22 @@
 <template>
   <div class="board-wrapper">
     <main class="board">
-      <UContainer
-        v-for="column in boardStore.board.columns"
-        :key="column.name"
+      <BoardColumn
+        v-for="(column, columnIndex) in boardStore.board.columns"
+        :key="column.id"
         class="column"
+        :column="column"
+        :column-index="columnIndex"
       >
-        <h2 class="mb-4">{{ column.name }}</h2>
-        <ul>
-          <li
-            v-for="task in column.tasks"
-            :key="task.id"
-          >
-            <UCard class="mb-4">
-              <strong>{{ task.name }}</strong>
-              <p>{{ task.description }}</p>
-            </UCard>
-          </li>
-        </ul>
+      </BoardColumn>
+      <UContainer class="column">
+        <UInput
+          v-model="newColumnName"
+          type="text"
+          placeholder="Create new column"
+          icon="i-heroicons-plus-circle-solid"
+          @keyup.enter="addColumn()"
+        />
       </UContainer>
     </main>
   </div>
@@ -25,6 +24,13 @@
 
 <script setup lang="ts">
 const boardStore = useBoardStore()
+
+const newColumnName = ref("")
+
+const addColumn = () => {
+  boardStore.addColumn(newColumnName.value)
+  newColumnName.value = ""
+}
 </script>
 
 <style scoped></style>

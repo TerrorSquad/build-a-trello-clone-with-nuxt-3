@@ -1,4 +1,16 @@
 module.exports = {
   root: true,
-  extends: ["@nuxt/eslint-config"],
-};
+  env: {
+    browser: true,
+    node: true,
+  },
+  parser: "vue-eslint-parser",
+  parserOptions: {
+    parser: "@typescript-eslint/parser",
+  },
+  extends: [
+    "@nuxt/eslint-config",
+    "plugin:prettier/recommended",
+    "@vue/eslint-config-prettier/skip-formatting",
+  ],
+}
